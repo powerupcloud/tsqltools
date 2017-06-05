@@ -62,7 +62,7 @@ INSERT INTO #result
   SELECT
     Concat('Service Account - ', servicename),
     CASE
-      WHEN serviceaccount LIKE 'NT %' THEN 'Try to change an AD account or Administrator Account'
+      WHEN serviceaccount LIKE 'NT %' THEN 'Try to change to an AD account or an Administrator Account'
       ELSE 'OK'
     END AS Recommendation
   FROM #serviceaccount
@@ -102,7 +102,7 @@ INSERT INTO #result
   SELECT
     Concat('Default Directory - ', directorytype),
     CASE
-      WHEN defaultdirectory LIKE 'C:\%' THEN 'Please Avoid to keep Data files in C: drive'
+      WHEN defaultdirectory LIKE 'C:\%' THEN 'Avoid keeping data files in C: drive'
       ELSE 'OK'
     END AS Recommendation
   FROM #datadirectory
@@ -126,7 +126,7 @@ INSERT INTO #result
   SELECT
     Concat('Startup Type - ', sqlservice),
     CASE
-      WHEN startuptype LIKE 'Manual' THEN 'Make this startup type as Automatic'
+      WHEN startuptype LIKE 'Manual' THEN 'Change SQL Server startup type to Automatic'
       ELSE 'OK'
     END AS Recommendation
   FROM #startuptype
@@ -148,7 +148,7 @@ INSERT INTO #result
   SELECT
     Concat('SA account name - ', NAME),
     CASE
-      WHEN NAME = 'sa' THEN 'Rename SA account to someother name'
+      WHEN NAME = 'sa' THEN 'sa account is standard and easy to bruteforce. Change its name to something else.'
       ELSE 'OK'
     END AS Recomendation
   FROM #saname
@@ -229,9 +229,9 @@ INSERT INTO #result
   SELECT
     Concat('Password Check - ', logins),
     CASE
-      WHEN passwordtype = 'Name = Password' THEN 'User Name and password is same'
-      WHEN passwordtype = 'Blank Password' THEN 'Blank Password'
-      WHEN passwordtype LIKE '%Days Ago%' THEN 'Password updated before 90Days Ago'
+      WHEN passwordtype = 'Name = Password' THEN 'User Name and password are same'
+      WHEN passwordtype = 'Blank Password' THEN 'Blank Password! Must be changed'
+      WHEN passwordtype LIKE '%Days Ago%' THEN 'The Password updated before 90 Days Ago'
       ELSE 'OK'
     END
   FROM #passwordcheck
@@ -304,7 +304,7 @@ INSERT INTO #result
   SELECT
     Concat('SQL Port Number ', portnumber),
     CASE
-      WHEN portnumber = 1433 THEN 'Please change Default port Number for SQL Server'
+      WHEN portnumber = 1433 THEN 'Change the default port Number for SQL Server'
       WHEN portnumber != 1433 THEN 'OK'
     END
   FROM #sqlport
@@ -326,7 +326,7 @@ INSERT INTO #result
   SELECT
     Concat('Number of DB - ', count),
     CASE
-      WHEN count > 100 THEN 'Please remove unwanted Databases'
+      WHEN count > 100 THEN 'Busy server. More than 100 databases. Consider removing unwanted Databases'
       ELSE 'OK'
     END
   FROM #numberofdb
@@ -354,7 +354,7 @@ IF EXISTS (SELECT
     SELECT
       'Is Buildin AdminGroup enabled',
       CASE
-        WHEN status = '9' THEN 'Please remove BUILTIN\Administrators login'
+        WHEN status = '9' THEN 'Remove BUILTIN\Administrators login'
       END
     FROM #buildinadmin
 ELSE
